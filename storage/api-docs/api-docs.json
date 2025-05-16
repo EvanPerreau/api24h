@@ -1,0 +1,324 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "P24H API",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/api/auth/create": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "f3c3bf130d4f17fda7b0a05374b65cfb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUserRequestDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "user created"
+                    },
+                    "422": {
+                        "description": "invalid input"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/auth/verify-email": {
+            "patch": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "13f0e4144069252fd1881cd33a0b5850",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerifyEmailRequestDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "email verified"
+                    },
+                    "422": {
+                        "description": "invalid input"
+                    },
+                    "401": {
+                        "description": "invalid verification code"
+                    },
+                    "403": {
+                        "description": "verification code expired"
+                    }
+                }
+            }
+        },
+        "/api/auth/resend-verification-email": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "1857a2a684aaf16e2afe75dc811392ea",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResendVerificationEmailRequestDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "verification email sent"
+                    },
+                    "422": {
+                        "description": "invalid input"
+                    },
+                    "403": {
+                        "description": "email already verified or too many attempts"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "9e2f8c66d6c7cd3b341c2c7fb7d3dcb0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginUserRequestDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenCoupleDTO"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "invalid email or password"
+                    },
+                    "403": {
+                        "description": "email not verified"
+                    },
+                    "422": {
+                        "description": "invalid input"
+                    }
+                }
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "afabf479aefff6ad7a88e7db44ebc550",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshTokenRequestDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "refreshed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenCoupleDTO"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "invalid input"
+                    },
+                    "403": {
+                        "description": "expired or invalid ability"
+                    }
+                },
+                "security": [
+                    {
+                        "scalar": "bearerAuth"
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "e9da9779c0196d48dc1dc085847c45f4",
+                "responses": {
+                    "200": {
+                        "description": "logged out"
+                    },
+                    "422": {
+                        "description": "invalid input"
+                    },
+                    "403": {
+                        "description": "expired or invalid ability"
+                    }
+                },
+                "security": [
+                    {
+                        "scalar": "bearerAuth"
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PaginationMeta": {
+                "properties": {
+                    "page": {
+                        "type": "integer"
+                    },
+                    "per_page": {
+                        "type": "integer"
+                    },
+                    "total": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateUserRequestDTO": {
+                "title": "CreateUserRequestDTO",
+                "description": "Data to create a new user",
+                "properties": {
+                    "name": {
+                        "description": "User's name",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "User's email",
+                        "type": "string",
+                        "example": "john.doe@gmail.com"
+                    },
+                    "password": {
+                        "description": "User's password",
+                        "type": "string",
+                        "minimum": 8,
+                        "example": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginUserRequestDTO": {
+                "title": "LoginUserRequestDTO",
+                "description": "Login user request data transfer object",
+                "properties": {
+                    "identifier": {
+                        "description": "User email or name",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "User password",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "RefreshTokenRequestDTO": {
+                "title": "RefreshTokenRequest",
+                "description": "Refresh token request data transfer object",
+                "properties": {
+                    "refreshToken": {
+                        "description": "Refresh token",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ResendVerificationEmailRequestDTO": {
+                "title": "ResendVerificationEmailRequestDTO",
+                "description": "Resend verification email request data transfer object",
+                "properties": {
+                    "email": {
+                        "description": "User email",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TokenCoupleDTO": {
+                "title": "TokenCoupleDTO",
+                "description": "Token couple data transfer object",
+                "properties": {
+                    "access_token": {
+                        "description": "Access token",
+                        "type": "string"
+                    },
+                    "refresh_token": {
+                        "description": "Refresh token",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VerifyEmailRequestDTO": {
+                "title": "VerifyEmailRequestDTO",
+                "description": "Data to verify user's email",
+                "properties": {
+                    "email": {
+                        "description": "User's email",
+                        "type": "string"
+                    },
+                    "code": {
+                        "description": "Verification code",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Token with auth ability",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        }
+    ]
+}
