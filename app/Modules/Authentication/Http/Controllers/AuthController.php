@@ -59,4 +59,15 @@ class AuthController extends Controller
         auth()->user()->tokens()->delete();
         return response()->json(['message' => 'Logged out']);
     }
+
+    #[
+        Get(path: '/api/auth/user', security: ['bearerAuth'], tags: ['Authentication']),
+        Response(response: 200, description: 'user', content: new JsonContent(ref: '#/components/schemas/User')),
+        Response(response: 422, description: 'invalid input'),
+        Response(response: 403, description: 'expired or invalid ability')
+    ]
+    function user(): JsonResponse
+    {
+        return response()->json(auth()->user());
+    }
 }

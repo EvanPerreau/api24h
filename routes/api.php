@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PrimeController;
 use App\Modules\Authentication\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,11 @@ Route::middleware(['auth:sanctum', 'abilities:refresh'])->group(function () {
 
 Route::middleware(['auth:sanctum', 'abilities:auth'])->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::get('/auth/user', [AuthController::class, 'user']);
+    Route::get('/prime', [PrimeController::class, 'index']);
+});
+
+Route::middleware(['auth:sanctum', 'abilities:auth,admin'])->group(function () {
+    Route::post('/prime', [PrimeController::class, 'add']);
+    Route::delete('/prime/{id}', [PrimeController::class, 'remove']);
 });
