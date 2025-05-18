@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Prime;
+use App\Http\Requests\CreatePrimeRequest;
+
 class PrimeController extends Controller
 {
     public function index()

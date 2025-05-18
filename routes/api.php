@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PrimeController;
+use App\Http\Controllers\ChasseController;
 use App\Modules\Authentication\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
