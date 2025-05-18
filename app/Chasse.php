@@ -13,6 +13,7 @@ class chasse extends Model
         'nom',
         'lieu',
         'date',
+        'user_id'
     ];
 
     protected $casts = [
