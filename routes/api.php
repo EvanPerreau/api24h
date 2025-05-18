@@ -9,10 +9,7 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::prefix('auth')->group(function () {
-    Route::post('/create', [AuthController::class, 'create']);
-    Route::patch('/verify-email', [AuthController::class, 'verifyEmail']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/resend-verification-email', [AuthController::class, 'resendVerificationEmail']);
 });
 
 Route::middleware(['auth:sanctum', 'abilities:refresh'])->group(function () {
