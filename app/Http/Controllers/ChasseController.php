@@ -28,9 +28,6 @@ class ChasseController extends Controller
 
     public function destroy(Chasse $chasse)
     {
-        if ($chasse->user_id !== auth()->user()->id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
         $chasse->delete();
         return response()->json(null);
     }
