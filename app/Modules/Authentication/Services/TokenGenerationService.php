@@ -17,7 +17,7 @@ class TokenGenerationService
 
     private function generateAccessToken(User $user): string
     {
-        if ($user->role === 'admin') {
+        if ($user->role === 'Admin') {
             return $user->createToken('authToken', ['auth', 'admin'], now()->addMinutes(60))->plainTextToken;
         }
         return $user->createToken('authToken', ['auth'], now()->addMinutes(60))->plainTextToken;
