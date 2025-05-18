@@ -26,8 +26,12 @@ class ChasseController extends Controller
         return response()->json($chasse);
     }
 
-    public function destroy(Chasse $chasse)
+    public function destroy(int $id)
     {
+        $chasse = Chasse::find($id);
+        if ($chasse === null) {
+            return response()->json(['error' => 'Chasse not found'], 404);
+        }
         $chasse->delete();
         return response()->json(null);
     }
