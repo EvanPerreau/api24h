@@ -29,6 +29,10 @@ class ChasseController extends Controller
     public function destroy(Chasse $chasse)
     {
         if ($chasse->user_id !== auth()->user()->id) {
+            Log::error('Unauthorized chasse deletion attempt', [
+                'user_id' => auth()->user()->id,
+                'chasse_id' => $chasse->id,
+            ]);
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         $chasse->delete();
