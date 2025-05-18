@@ -20,6 +20,9 @@ Route::middleware(['auth:sanctum', 'abilities:auth'])->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/user', [AuthController::class, 'user']);
     Route::get('/prime', [PrimeController::class, 'index']);
+    Route::get('/chasse', [ChasseController::class, 'index']);
+    Route::post('/chasse', [ChasseController::class, 'store']);
+    Route::delete('/chasse/{id}', [ChasseController::class, 'destroy']);
 });
 
 Route::middleware(['auth:sanctum', 'abilities:auth,admin'])->group(function () {
