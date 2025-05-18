@@ -8,6 +8,7 @@ use App\Modules\Authentication\Models\Entities\User;
 use App\Modules\Authentication\Services\TokenGenerationService;
 use App\Modules\Exceptions\Http\HttpForbiddenException;
 use App\Modules\Exceptions\Http\HttpUnauthorizedException;
+use Illuminate\Support\Facades\Http;
 
 class LoginUserAction
 {
@@ -19,18 +20,26 @@ class LoginUserAction
      */
     public function execute(LoginUserRequestDTO $dto): TokenCoupleDTO
     {
-        if (filter_var($dto->identifier, FILTER_VALIDATE_EMAIL)) {
-            $user = User::query()->where('email', $dto->identifier)->first();
-        } else {
-            $user = User::query()->where('name', $dto->identifier)->first();
-        }
-        if (!$user || !password_verify($dto->password, $user->password)) {
-            throw new HttpUnauthorizedException('Invalid email or password');
-        }
-        if (!$user->email_verified_at) {
-            throw new HttpForbiddenException('Email not verified', extraData: ['email' => $user->email]);
-        }
+        $response = Http::post('https://api24h.82.29.175.123.nip.io/api/intra/info/authentification/BIC-aca76df0-9469', [
+            'login' => $dto->identifier,
+            'password' => $dto->password,
+        ]);
 
-        return $this->tokenGenerationService->generateCouple($user);
+        if ($response->failed()) {
+            throw new HttpUnauthorizedException('Invalid email or password');
+        } else {
+            $data = $response->json();
+            if (User::query()->where('name', $data["nom"])->exists()) {
+                $user = User::query()->where('name', $data["nom"])->first();
+                return $this->tokenGenerationService->generateCouple($user);
+            } else {
+                $user = new User();
+                $user->name = $data["nom"];
+                $user->prenom = $data["prenom"];
+                $user->role = $data["droit"];
+                $user->save();
+                return $this->tokenGenerationService->generateCouple($user);
+            }
+        }
     }
 }

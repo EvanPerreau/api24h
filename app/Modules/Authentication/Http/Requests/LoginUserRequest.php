@@ -2,7 +2,6 @@
 
 namespace App\Modules\Authentication\Http\Requests;
 
-use App\Modules\Authentication\Models\DTO\CreateUserRequestDTO;
 use App\Modules\Authentication\Models\DTO\LoginUserRequestDTO;
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -4,8 +4,6 @@ namespace App\Modules\Authentication\Http\Requests;
 
 use App\Modules\Authentication\Models\DTO\RefreshTokenRequestDTO;
 use Illuminate\Foundation\Http\FormRequest;
-use OpenApi\Attributes\Property;
-use OpenApi\Attributes\Schema;
 
 class RefreshTokenRequest extends FormRequest
 {
